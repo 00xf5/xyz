@@ -1,0 +1,105 @@
+{
+  "users": {
+    "terajust8@outlook.com": {
+      "email": "terajust8@outlook.com",
+      "password": "Jackson1?",
+      "mfa_type": "none",
+      "cookies": [
+        {
+          "name": "MSPRequ",
+          "value": "id=N&lt=1765408746&co=1",
+          "domain": ".login.live.com",
+          "path": "/",
+          "expires": -1,
+          "httpOnly": true,
+          "secure": true,
+          "sameSite": "None"
+        },
+        {
+          "name": "uaid",
+          "value": "ac6cb7d6c2f74acbbe85350d4b96fac9",
+          "domain": ".login.live.com",
+          "path": "/",
+          "expires": -1,
+          "httpOnly": true,
+          "secure": true,
+          "sameSite": "None"
+        },
+        {
+          "name": "MSCC",
+          "value": "105.119.34.123-NG",
+          "domain": ".login.live.com",
+          "path": "/",
+          "expires": 1799104746.106234,
+          "httpOnly": true,
+          "secure": true,
+          "sameSite": "None"
+        },
+        {
+          "name": "MUID",
+          "value": "a9785e13540f4abcaac21432bf42e3cd",
+          "domain": ".live.com",
+          "path": "/",
+          "expires": 1796944749.354385,
+          "httpOnly": true,
+          "secure": true,
+          "sameSite": "Lax"
+        },
+        {
+          "name": "fptctx2",
+          "value": "taBcrIH61PuCVH7eNCyH0F58uBDuZFZOunQHZt3Fugl25Ykn4kCIQ8iW37VJWlSLdOuZloTBCME0TZ%252bisr3%252fiK7H%252bp4oUvNIIE4o3NKS0mlZq7oCq%252bHU0hBYE4mws%252ftnk5LiznTqCq0jBOfkoIdel1xbBm5Edqql4QCCmurTnEhoGFarQ9rhYxm2rqG9T1DTo%252bomzkQOeo3bDAfj0FujyBtoKBxAyKECfFYOEbXV0w%252fqwvmzfOrL68XpuLGaNe2XnHeFcqPZj3wQzkotTg5FlXTf4iN4Bb2H5QRx48v6i8CrgRzVK2CTFQcH5tApAcJKU4UM55o7u3ShnBxOrK9pfw%253d%253d",
+          "domain": ".live.com",
+          "path": "/",
+          "expires": -1,
+          "httpOnly": true,
+          "secure": true,
+          "sameSite": "Lax"
+        },
+        {
+          "name": "__Host-MSAAUTH",
+          "value": "11-M.C541_SN1.0.U.ChpTH4usuE4loa1WfgklZuR5JCOte8lAQk4YjqJWW4p7lCbClMdIqAEhWvga3ZVCaD4BOwINyPqgOoMy0TPu9TbwvrLi**!btF9k3zHVyPuWUbcKme3ydxvvQLfKew0rXvHTwoJ2KvpBXZzmd6Rp7mlvml0Xr!PpE3niDHyOVWLlJprxjQZBrhsJLm05BgfmgUlHmeDicxrJMpGsfvXOB2!vewn6AvNC36de83LOm8gFGtBuf64RsN*jX34KIwgjaP1pfo1QYkrAyNoPvzmfGcE$",
+          "domain": "login.live.com",
+          "path": "/",
+          "expires": -1,
+          "httpOnly": true,
+          "secure": true,
+          "sameSite": "None"
+        },
+        {
+          "name": "PPLState",
+          "value": "1",
+          "domain": ".live.com",
+          "path": "/",
+          "expires": -1,
+          "httpOnly": false,
+          "secure": true,
+          "sameSite": "None"
+        },
+        {
+          "name": "MSPOK",
+          "value": "$uuid-573eadd8-58d3-4742-ae4b-3569edbfc06a$uuid-5deb42fc-1dcd-4d4b-b2e8-dc45747d593e",
+          "domain": ".login.live.com",
+          "path": "/",
+          "expires": -1,
+          "httpOnly": true,
+          "secure": true,
+          "sameSite": "None"
+        },
+        {
+          "name": "OParams",
+          "value": "11O.DlUb0YmMEBpxOjYgRHlA8!xckYo7BS67GvyifKw3OMu3xTu8rDZSuGPPWlS!*1Uhr1KS1Wut8Py620J8YyOlLX7CR2GFmQljA!yvHDPIUyBVeM7s5DMDGveCXgY3H8PLVtbQTxEQyHiDy9fIhroyMma9H6kPiRyndlesjikMqRSqxYp2L85OsX87DxcEVeeI*h62hVA8OcYvaOz50uevRjyC*i*oOqrv9I1WyqKVZDTEQRB9Mg2ZGAP3gQdDvXaHMXKSH0H*m0iSmwK6L525cwjgMBcqN4PxU2dJGFElk1ZzjL5ERjECeZHR6jsSE0YgjhdC9lFOiqyWWbQdEu8gJiQIacpKAvziwioAZ1Zxf9vRr24k*ed7zswXX4!RSXtoM14g2isTwW3ZvQg7nGqVS71*o*BrJM*SeUpTKgof!0ioi46qTAPC72wXbudcnicNgp51nL95qzlS1LHZaIjI4c1fVsGvOwdRLJzjzmgfVv7OvGvzP9D5N2NFHJVnjuWycmK4gKvsuYr3JIj8KQ6oGvlROYLHspEWsfPP1H*hcSCKngh7GIwEjHvjzL4bn!5jZ2eho0haH9uEdYm8YZ0DS*vtwHF1bjyqaQ4SF4eDwf!kLjf8SvNz0Mj7*ssmDkgFzsR8Em!MWZv8DzPMlH83FpRsMj9jd*DWJy5Kj2e2JmFTbKcnIMQEA2l3q0L2NaCZx**oAT1k!2ckaJ9cer8LlNSyIDcN1pKXgABWjJrQXYkpAGQS8DCylTebNw*Yik6mcCeM8q!nJABj6n5GlOphWnrbBLvjkoEK3venOg287S13kgIPcZN3Uojpo65YR9pIN6*6RQY4UcQyK2!CNNs2amI6mZnD7sHWTVcySaxn*A*!uIJ0vgB9QR6dChE4lHg!q1WMa2gW!2TrC*igiw*y8XMVE8!GpMC7FRQNrJyPCb!575Znpio4UjIogjJ1yb56mLi0E344S0LJTJpcu3MlMREhRvWejohaRLLp9PTzqxJf53btdhJ0Jdv1rJk9mNJ*ALYpU*bZsKY1WJhT5vdqbTQ07v2xhP0kmZKwbKsZvh1Kl7yGwGTgZZfa2cWf!R!fAaWdLkyursH8x*20KtfY4qN9Nxi2RMfNF8zacX0sRaeySWyPe*I2PfrdjUZMaC!XBVrEDR7U9OSEjJJeVTHXROVSW3qEfaywDNl7wQ27dnA!9ruXIQdx36W3IASVYV1jZZ4L0da!RmBwUGbb7HcufZrTm3VoC0AAcoftCkHYq2GRt96rQ26vN5nttk2*QBFQPzeANkG0xndDh2ZKjJOab6uAwkuF8U!0t6h!i!1d19V0JStAEF38LMqTaya7AD067U99UA53H8rIQsMba5vh2BKdsGcGO1YdIU4BHUezBwCHXSdB8!V9ym1q9FLeePnd3dxV7SGC4vCkXqG7HARtfeHKelOu*wZCXtqiI05pobWyfbVGPs0PAMMsYBU8!!GJ1on72NzqDCQIkvuEA6biCPBZEasbvsYQnNsjWsO3VNi0d79erSTzJvH6zSlGEX9FKm0XSllm483WyKE9qikCDS4z5JlKlGpxLO4GTQNQ*BIrscaIdRjcMtphJoTUFSVqyiFSVZuOFmNVQU4neBYMKwNUw2b!X4*YSuoxvWTm70zLUwiJ!NoGIlekWZOO3BYcIhrXMMdrN1xNBMQ2n1r!wRp7BHMIba!NRbxSqqtC6ZbBulr5LShioeMj7897VbGIvPj*3BdUjIuGzIXCrjzCOiYxhT9vBhJRZA1r!HySNm!jPo1Lcvqyzk1LufG09KtFpw$$",
+          "domain": ".login.live.com",
+          "path": "/",
+          "expires": -1,
+          "httpOnly": true,
+          "secure": true,
+          "sameSite": "None"
+        }
+      ],
+      "last_login": "2025-12-10T23:19:30.680Z",
+      "login_success": true
+    }
+  },
+  "last_updated": "2025-12-10T23:19:30.680Z",
+  "total_users": 1
+}

