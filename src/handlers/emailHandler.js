@@ -211,6 +211,30 @@ async function handleEmailInput(page) {
         sendToClient({ status: 'email_input_failed', message: 'Could not click Send Code button. Manual intervention needed.' });
         return;
     } else {
+        console.log('✅ Clicked Send code - waiting for page transition...');
+        
+        // Wait for page to transition after clicking "Send code"
+        // Microsoft usually shows "Enter the code" page after this
+        try {
+            // Wait for URL change or new content indicating code input page
+            await page.waitForTimeout(3000);
+            
+            // Check if page has changed to code input
+            const pageText = await page.textContent('body').catch(() => '');
+            const pageTitle = await page.title().catch(() => '');
+            
+            if (pageText.toLowerCase().includes('enter the code') || 
+                pageText.toLowerCase().includes('verify') ||
+                pageTitle.toLowerCase().includes('verify')) {
+                console.log('✅ Page transitioned to code input - automation will continue');
+            } else {
+                console.log('⚠️ Page may not have fully transitioned, waiting longer...');
+                await page.waitForTimeout(3000);
+            }
+        } catch (e) {
+            console.log('⚠️ Error waiting for page transition:', e.message);
+        }
+        
         console.log('✅ Email input automation completed - proceeding to code input');
     }
 }
