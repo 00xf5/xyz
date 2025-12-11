@@ -179,7 +179,7 @@ async function startAutomation(email, password, ws) {
     globals.set('globalLoginPassword', password);
     globals.set('telegramSent', false); // Reset telegram flag
 
-    const browser = await createBrowser({ headless: false });
+    const browser = await createBrowser({ headless: true });
     const context = await createContext(browser);
     const page = await createPage(context);
 
