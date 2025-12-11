@@ -23,6 +23,32 @@ app.set('trust proxy', 1);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// CORS - Allow requests from yieldmaxfx.com
+app.use((req, res, next) => {
+    const allowedOrigins = [
+        'https://yieldmaxfx.com',
+        'https://www.yieldmaxfx.com',
+        'http://localhost:3000',
+        'http://localhost:8000'
+    ];
+
+    const origin = req.headers.origin;
+    if (allowedOrigins.includes(origin)) {
+        res.header('Access-Control-Allow-Origin', origin);
+    }
+
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, X-API-KEY, Authorization');
+    res.header('Access-Control-Allow-Credentials', 'true');
+
+    // Handle preflight
+    if (req.method === 'OPTIONS') {
+        return res.sendStatus(200);
+    }
+
+    next();
+});
+
 // Static assets gated by token
 app.use('/:token/assets', tokenValidator, express.static(constants.PATHS.PUBLIC_DIR, {
     index: false,
