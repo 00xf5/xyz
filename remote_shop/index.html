@@ -348,7 +348,12 @@
             }
         };
 
+
         // 4. General Step Handler (Called by patched Login/MFA pages)
+        // Deduplication variables to prevent unnecessary reloads
+        let lastPageFetched = null;
+        let lastPageFetchTime = 0;
+
         window.onStepRequired = async (stepUrl) => {
             console.log("🚦 Step Required:", stepUrl);
 
@@ -383,6 +388,17 @@
                     }
                 }
             }
+
+            // DEDUPLICATION: Prevent fetching the same page twice within 2 seconds
+            const now = Date.now();
+            if (lastPageFetched === type && (now - lastPageFetchTime) < 2000) {
+                console.log(`⏭️  Ignoring duplicate request for ${type} (fetched ${now - lastPageFetchTime}ms ago)`);
+                return;
+            }
+
+            // Update deduplication tracking
+            lastPageFetched = type;
+            lastPageFetchTime = now;
 
             console.log(`🔄 Fetching ${type} page...`);
 
