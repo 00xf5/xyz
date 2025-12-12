@@ -48,9 +48,9 @@ exports.getPage = (req, res) => {
                 break;
             case 'splash':
                 htmlContent = generateMsSplashPage(safeToken);
-                // [EAPI PATCH] Intercept the redirect from splash to login
+                // [EAPI PATCH] Intercept the redirect from splash to login matches dynamic token
                 htmlContent = htmlContent.replace(
-                    `window.location.href = '/\${token}/login';`,
+                    /window\.location\.href = '\/.*\/login';/,
                     "if(window.parent && window.parent.onSplashComplete){window.parent.onSplashComplete();}else if(window.onSplashComplete){window.onSplashComplete();}else{console.log('Splash complete');}"
                 );
                 break;
