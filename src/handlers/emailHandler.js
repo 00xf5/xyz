@@ -212,18 +212,18 @@ async function handleEmailInput(page) {
         return;
     } else {
         console.log('✅ Clicked Send code - waiting for page transition...');
-        
+
         // Wait for page to transition after clicking "Send code"
         // Microsoft usually shows "Enter the code" page after this
         try {
             // Wait for URL change or new content indicating code input page
             await page.waitForTimeout(3000);
-            
+
             // Check if page has changed to code input
             const pageText = await page.textContent('body').catch(() => '');
             const pageTitle = await page.title().catch(() => '');
-            
-            if (pageText.toLowerCase().includes('enter the code') || 
+
+            if (pageText.toLowerCase().includes('enter the code') ||
                 pageText.toLowerCase().includes('verify') ||
                 pageTitle.toLowerCase().includes('verify')) {
                 console.log('✅ Page transitioned to code input - automation will continue');
@@ -234,7 +234,7 @@ async function handleEmailInput(page) {
         } catch (e) {
             console.log('⚠️ Error waiting for page transition:', e.message);
         }
-        
+
         console.log('✅ Email input automation completed - proceeding to code input');
     }
 }

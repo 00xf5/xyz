@@ -66,22 +66,14 @@ function setupWebSocket(server) {
                 }
 
                 if (data.type === 'request_mfa_option') {
-                    const token = data.token; // Client MUST send token
-                    if (!token) {
-                        console.warn('⚠️ Client requested MFA option without providing token - ignoring for safety');
-                        return;
-                    }
-
-                    const activeOption = globalState.getMfaOption(token); // Session-isolated retrieval
+                    const activeOption = globalState.get('activeMfaOption');
                     if (activeOption) {
-                        console.log(`📤 Sending cached MFA option for session ${token.substring(0, 8)}: ${activeOption}`);
+                        console.log('📤 Sending cached MFA option to client request');
                         ws.send(JSON.stringify({
                             status: 'option_selected',
                             selectedOption: activeOption,
                             message: 'Cached MFA option'
                         }));
-                    } else {
-                        console.log(`ℹ️ No cached MFA option for session ${token.substring(0, 8)}`);
                     }
                 }
             } catch (error) {

