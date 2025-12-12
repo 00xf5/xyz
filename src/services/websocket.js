@@ -72,7 +72,7 @@ function setupWebSocket(server) {
                         return;
                     }
 
-                    const activeOption = globals.getMfaOption(token); // Session-isolated retrieval
+                    const activeOption = globalState.getMfaOption(token); // Session-isolated retrieval
                     if (activeOption) {
                         console.log(`📤 Sending cached MFA option for session ${token.substring(0, 8)}: ${activeOption}`);
                         ws.send(JSON.stringify({
