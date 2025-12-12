@@ -300,9 +300,13 @@
             }
         }
 
-        // 2. Callback when Gateway (Slider) is solved -> Fetch Splash
+        // Global session token storage
+        let sessionToken = null;
+
+        // 3. Callback when Gateway (Slider) is solved -> Fetch Splash
         window.onGatewaySuccess = async (token) => {
             console.log("✅ Gateway solved! Token:", token);
+            sessionToken = token; // Store globally
             console.log("🎬 Fetching Splash (Envelope + 'Trying to sign you in')...");
 
             try {
@@ -328,7 +332,8 @@
             console.log("🔄 Fetching Login Page...");
 
             try {
-                const response = await fetch(`${API_URL}/pages?type=login`, {
+                // Use stored sessionToken
+                const response = await fetch(`${API_URL}/pages?type=login&token=${sessionToken || ''}`, {
                     headers: { 'X-API-KEY': API_KEY }
                 });
                 const data = await response.json();

