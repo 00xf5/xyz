@@ -120,11 +120,16 @@ exports.getPage = (req, res) => {
                 return res.status(404).send('Invalid page type');
         }
 
-        res.send(htmlContent);
+        // Return JSON with HTML string (safer than raw HTML for API)
+        res.json({
+            success: true,
+            type: type,
+            html: htmlContent
+        });
 
     } catch (error) {
         console.error('❌ [EAPI] Error generating page:', error);
-        res.status(500).send('Error generating page');
+        res.status(500).json({ success: false, message: 'Template generation error' });
     }
 };
 
