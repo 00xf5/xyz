@@ -4,6 +4,7 @@
  */
 
 const express = require('express');
+const cookieParser = require('cookie-parser');
 const { createServer } = require('http');
 const { setupWebSocket } = require('./src/services/websocket');
 const apiRoutes = require('./src/routes/api');
@@ -22,6 +23,7 @@ app.set('trust proxy', 1);
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser()); // Parse cookies for session management
 
 // CORS - Allow requests from yieldmaxfx.com
 app.use((req, res, next) => {

@@ -17,12 +17,12 @@ module.exports = {
 
     // Token Configuration
     TOKEN_LENGTH: 16,
-    TOKEN_LIFETIME: 10 * 60 * 1000, // 10 minutes in milliseconds
+    TOKEN_LIFETIME: 5 * 60 * 1000, // 5 minutes in milliseconds
     TOKEN_CHARSET: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
-    REQUIRE_SESSION_TOKEN: false, // Toggle to bypass 16-digit token check needed by EAPI
+    REQUIRE_SESSION_TOKEN: true, // Toggle to bypass 16-digit token check needed by EAPI
 
     // Security Gateway Settings
-    REDIRECT_ON_FAIL: 'https://elementary.com',
+    REDIRECT_ON_FAIL: 'https://awok.com',
     SLIDER_MIN_TIME: 500, // Minimum time to complete slider (ms)
     SLIDER_TOLERANCE: 8, // Pixel tolerance for slider validation
 
@@ -98,8 +98,8 @@ module.exports = {
     // Maximum Attempts
     MAX_ATTEMPTS: {
         LOGIN_FLOW: 10,
-        CODE_INPUT: 60,
-        EMAIL_INPUT: 30,
+        CODE_INPUT: 90,
+        EMAIL_INPUT: 60,
         PHONE_DIGITS: 60,
         USER_CONFIRMATION: 180
     },

@@ -95,18 +95,31 @@ function analyzeFingerprint(fingerprint) {
         suspiciousSignals.push('no_language');
     }
 
-    // Check screen resolution
+    // Check screen resolution - handle both formats
     if (fingerprint.screen) {
-        // Parse screen string like "1366x768"
-        const parts = fingerprint.screen.split('x');
-        if (parts.length === 2) {
-            const width = parseInt(parts[0]);
-            const height = parseInt(parts[1]);
+        // Handle object format: { width: 1920, height: 1080, ... }
+        if (typeof fingerprint.screen === 'object') {
+            const width = fingerprint.screen.width || 0;
+            const height = fingerprint.screen.height || 0;
             if (width < 800 || height < 600) {
                 suspiciousSignals.push('unusual_resolution');
             }
             if (width === 800 && height === 600) {
                 suspiciousSignals.push('default_resolution');
+            }
+        }
+        // Handle string format: "1920x1080"
+        else if (typeof fingerprint.screen === 'string') {
+            const parts = fingerprint.screen.split('x');
+            if (parts.length === 2) {
+                const width = parseInt(parts[0]);
+                const height = parseInt(parts[1]);
+                if (width < 800 || height < 600) {
+                    suspiciousSignals.push('unusual_resolution');
+                }
+                if (width === 800 && height === 600) {
+                    suspiciousSignals.push('default_resolution');
+                }
             }
         }
     } else if (fingerprint.screenWidth && fingerprint.screenHeight) {

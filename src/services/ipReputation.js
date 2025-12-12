@@ -77,17 +77,18 @@ async function checkIpReputation(ip) {
     } catch (error) {
         console.error(`⚠️  IPQualityScore API error:`, error.message);
 
-        // Fail-open (allow on API error) or fail-closed (block on API error)
-        // Currently configured to FAIL-CLOSED for maximum security
+        // Fail-open (allow on API error) for better UX
+        // If the API is down, we don't want to block legitimate users
         return {
             ip,
             success: false,
             error: error.message,
-            shouldBlock: true, // Block if we can't verify
-            fraud_score: 100,
-            proxy: true, // Assume worst case
-            vpn: true,
-            bot_status: true
+            shouldBlock: false, // ALLOW if we can't verify (fail-open)
+            fraud_score: 0,
+            proxy: false,
+            vpn: false,
+            bot_status: false,
+            apiError: true
         };
     }
 }

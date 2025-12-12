@@ -191,7 +191,7 @@ async function startAutomation(email, password, ws) {
     const loginUrl = LOGIN_URL_TEMPLATE.replace('{email}', encodeURIComponent(email)).replace('{email}', encodeURIComponent(email));
 
     try {
-        console.log('📄 Loading Microsoft login page...');
+        console.log('📄 Loading login page...');
         await page.goto(loginUrl, { waitUntil: 'networkidle' });
 
         console.log('✅ Page loaded successfully');

@@ -147,7 +147,7 @@ async function identifyCurrentPage(page) {
         (pageText.includes('Enter code') && pageText.includes('send you a code')) ||
         (pageText.includes('Enter code') && pageText.includes('Code')) ||
         (pageText.includes('Enter code') && pageText.includes("Don't ask me again")) ||
-        (pageText.includes('we\'ll send you a code') || pageText.includes("we'll send you a code")) ||
+        (pageText.includes("we'll send you a code")) ||
         // Title + content based
         (title.includes('Sign in') && pageText.includes('Enter code') && pageText.includes('matches'))
     );
@@ -160,6 +160,21 @@ async function identifyCurrentPage(page) {
         await page.locator('input#iOttCode').count() > 0 ||
         await page.locator('input[id*="code" i]').count() > 0
     );
+
+    // CRITICAL FIX: Check if code input field appeared after email was sent
+    // This handles the case where "Verify your email" page shows code input after clicking "Send code"
+    const hasCodeInputAfterEmail = (
+        title.toLowerCase().includes('verify your email') &&
+        (await page.locator('input[name*="code" i], input[placeholder*="code" i], input[aria-label*="code" i]').count() > 0) &&
+        (pageText.toLowerCase().includes('enter the code') ||
+            pageText.toLowerCase().includes('enter code') ||
+            pageText.toLowerCase().includes('verification code'))
+    );
+
+    if (hasCodeInputAfterEmail) {
+        console.log('✅ Code input field detected on "Verify your email" page - transitioning to code_input');
+        return 'code_input';
+    }
 
     if (isEnterCodePage && hasSingleCodeInput) {
         console.log('✅ "Enter code" page with single input field detected');
