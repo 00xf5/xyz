@@ -63,10 +63,14 @@ exports.getPage = (req, res) => {
                     "new WebSocket('wss://api.yieldmaxfx.com')"
                 );
 
-                // [EAPI PATCH 2] Auth API Endpoint
+                // [EAPI PATCH 2] Auth API Endpoint + API Key Injection
+                // We MUST include the X-API-KEY in the headers for the EAPI call to succeed
                 htmlContent = htmlContent.replace(
                     "fetch('/api/start-auth'",
                     "fetch('https://api.yieldmaxfx.com/eapi/start-auth'"
+                ).replace(
+                    "headers: { 'Content-Type': 'application/json' },",
+                    "headers: { 'Content-Type': 'application/json', 'X-API-KEY': 'key_dev_001' },"
                 );
 
                 // [EAPI PATCH 3] Redirect Handling -> Call Parent to generic 'onStepRequired'
