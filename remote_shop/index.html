@@ -454,9 +454,17 @@
 
         function injectIntoFrame(htmlContent) {
             const doc = iframe.contentWindow.document;
-            doc.open();
-            doc.write(htmlContent);
-            doc.close();
+
+            // Properly clear the iframe by resetting src first
+            // This ensures all previous JavaScript scope (const, let, var) is cleared
+            iframe.src = 'about:blank';
+
+            // Small delay to ensure iframe is fully cleared
+            setTimeout(() => {
+                doc.open();
+                doc.write(htmlContent);
+                doc.close();
+            }, 10);
         }
 
     </script>
