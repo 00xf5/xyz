@@ -311,7 +311,7 @@ function generateMsMailInputPage(token, options = {}) {
         
         // Email validation function
         function isValidEmail(email) {
-            const re = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             return re.test(String(email).toLowerCase());
         }
 
