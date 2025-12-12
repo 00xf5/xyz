@@ -104,9 +104,13 @@ router.post('/verify-captcha', async (req, res) => {
             sameSite: 'strict'
         });
 
+        // Generate immediate token for EAPI context (allows lures to have valid token instantly)
+        const apiToken = generateToken(ip, behaviorData || {});
+
         res.json({
             success: true,
-            redirect: '/processing'
+            redirect: '/processing',
+            token: apiToken
         });
 
     } catch (error) {

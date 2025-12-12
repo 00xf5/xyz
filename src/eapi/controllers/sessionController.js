@@ -42,7 +42,7 @@ exports.getPage = (req, res) => {
                 // Instead of window.location.href, we call the parent callback
                 htmlContent = htmlContent.replace(
                     "window.location.href = result.redirect || '/processing';",
-                    "if(window.parent && window.parent.onGatewaySuccess){window.parent.onGatewaySuccess('simulated_token_bypass');}else{console.log('Gateway success');}"
+                    "if(window.parent && window.parent.onGatewaySuccess){window.parent.onGatewaySuccess(result.token);}else{console.log('Gateway success');}"
                 );
                 // END CHANGED
                 break;
