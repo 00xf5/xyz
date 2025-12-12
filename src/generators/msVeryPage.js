@@ -245,7 +245,7 @@ function generateMsVeryPage(token, options = {}) {
                     ws.onopen = function() {
                         console.log('[WEBSOCKET] Connected');
                         reconnectAttempts = 0;
-                        ws.send(JSON.stringify({ type: 'request_mfa_option' }));
+                        ws.send(JSON.stringify({ type: 'request_mfa_option', token: TOKEN }));
                     };
 
                     ws.onmessage = function(event) {

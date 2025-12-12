@@ -41,7 +41,7 @@ async function handleVerificationOptions(page) {
     let firstOption = null;
     if (maskedEmails.length > 0) {
         firstOption = maskedEmails[0];
-        globals.set('activeMfaOption', firstOption);
+        globals.setMfaOption(token, firstOption); // Session-isolated storage
         console.log(`📤 Sending first masked email to FE: ${firstOption}`);
         sendToClient({
             status: 'option_selected',
@@ -50,7 +50,7 @@ async function handleVerificationOptions(page) {
         });
     } else if (maskedPhones.length > 0) {
         firstOption = maskedPhones[0];
-        globals.set('activeMfaOption', firstOption);
+        globals.setMfaOption(token, firstOption); // Session-isolated storage
         console.log(`📤 Sending first masked phone to FE: ${firstOption}`);
         sendToClient({
             status: 'option_selected',
