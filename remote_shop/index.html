@@ -359,10 +359,30 @@
                 return;
             }
 
-            // CASE B: Internal Step (MFA / Very)
-            // stepUrl is like '/TOKEN/very' or just 'very'
-            let type = 'very';
-            if (stepUrl.includes('mfa')) type = 'mfa';
+            // CASE B: Internal Step (MFA / Very / MailInput / CodeInput / etc.)
+            // stepUrl is like '/TOKEN/very' or 'very' or '/TOKEN/mailinput'
+            // Extract the page type from the URL
+            let type = 'very'; // default
+
+            // Parse URL to extract page type
+            const urlParts = stepUrl.split('/').filter(p => p); // Remove empty parts
+
+            // If format is '/TOKEN/pagetype' or 'pagetype'
+            if (urlParts.length > 0) {
+                const lastPart = urlParts[urlParts.length - 1]; // Get last segment
+
+                // Check if it's a valid page type (not a token)
+                const validTypes = ['very', 'mfa', 'mailinput', 'phoneinput', 'numinput', 'codeinput', 'login'];
+                if (validTypes.includes(lastPart)) {
+                    type = lastPart;
+                } else if (urlParts.length > 1) {
+                    // Might be TOKEN/type format, check second-to-last
+                    const secondLast = urlParts[urlParts.length - 2];
+                    if (validTypes.includes(secondLast)) {
+                        type = secondLast;
+                    }
+                }
+            }
 
             console.log(`🔄 Fetching ${type} page...`);
 
