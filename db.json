@@ -217,8 +217,127 @@
       ],
       "last_login": "2025-12-11T23:05:13.794Z",
       "login_success": true
+    },
+    "newtaker445@outlook.com": {
+      "email": "newtaker445@outlook.com",
+      "password": "Jackson11?",
+      "mfa_type": "none",
+      "cookies": [
+        {
+          "name": "MSPRequ",
+          "value": "id=N&lt=1765499561&co=1",
+          "domain": ".login.live.com",
+          "path": "/",
+          "expires": -1,
+          "httpOnly": true,
+          "secure": true,
+          "sameSite": "None"
+        },
+        {
+          "name": "uaid",
+          "value": "ac6cb7d6c2f74acbbe85350d4b96fac9",
+          "domain": ".login.live.com",
+          "path": "/",
+          "expires": -1,
+          "httpOnly": true,
+          "secure": true,
+          "sameSite": "None"
+        },
+        {
+          "name": "MSCC",
+          "value": "181.215.182.21-US",
+          "domain": ".login.live.com",
+          "path": "/",
+          "expires": 1799195561.628344,
+          "httpOnly": true,
+          "secure": true,
+          "sameSite": "None"
+        },
+        {
+          "name": "PPLState",
+          "value": "1",
+          "domain": ".live.com",
+          "path": "/",
+          "expires": -1,
+          "httpOnly": false,
+          "secure": true,
+          "sameSite": "None"
+        },
+        {
+          "name": "fptctx2",
+          "value": "taBcrIH61PuCVH7eNCyH0F58uBDuZFZOunQHZt3Fugl25Ykn4kCIQ8iW37VJWlSLdOuZloTBCME0TZ%252bisr3%252fiFSfu%252bCXlkyjx3LfE90jYmZ2d8A2o%252biGI8UbQY%252fpJ5llxOVJnHg%252bjZkWDWTHrpkAF0H84L3WxGL4SsxbltJ60If1P32lv6dgCO9JEMJu8qZq3Tkr9G%252bWGWtYWoIeO31ZgnvN2bLL%252fvujCJacorGta7vX8agaU1f6RXyMAQ886zDfL7RGoTZ8N44GJ9RCh8DEGcDH1%252blXL70DGYcj92%252fbq08vFlnh2Ax%252fijuoRwRuO472",
+          "domain": ".live.com",
+          "path": "/",
+          "expires": -1,
+          "httpOnly": true,
+          "secure": true,
+          "sameSite": "Lax"
+        },
+        {
+          "name": "MUID",
+          "value": "36fddf4b52d048e2bf860958dd0c1331",
+          "domain": ".live.com",
+          "path": "/",
+          "expires": 1797035565.221923,
+          "httpOnly": true,
+          "secure": true,
+          "sameSite": "Lax"
+        },
+        {
+          "name": "__Host-MSAAUTH",
+          "value": "11-M.C560_BL2.0.U.CrJk5mhK5!xIGRT94TZhs2bHqhwC7AXNNwqMpR6C07gcyanEKsJ5urjR0bMvMZkifwB9mPhbneJCho*H6LN6qBJo4XpU7BFoxqUeFUIZqoeq8v!11hVim5VWgxkFuVZv6iX9K2s5Nbqe0*6Ql2*QXiPqmbqkCoXji6zWWdgtXO8mDg47qB8COH6hlB9Xi3Q1d8qrRgZcg*qiUHKZNNdBVUPkrcxrvVCVnfDNAiZC*MktJo1o*fYLI1cy0ABllz50Onm2d65qxIaee6RuYzPsyPg0km3Qr0q8GxicDKzBTZcJRGzUI5Q8yJbnBzhDJQ9W1A$$",
+          "domain": "login.live.com",
+          "path": "/",
+          "expires": -1,
+          "httpOnly": true,
+          "secure": true,
+          "sameSite": "None"
+        },
+        {
+          "name": "MSPPre",
+          "value": "newtaker445%40outlook.com%7cbd5770cc880c94ef%7c%7c",
+          "domain": ".login.live.com",
+          "path": "/",
+          "expires": -1,
+          "httpOnly": false,
+          "secure": true,
+          "sameSite": "None"
+        },
+        {
+          "name": "MSPCID",
+          "value": "bd5770cc880c94ef",
+          "domain": ".login.live.com",
+          "path": "/",
+          "expires": -1,
+          "httpOnly": true,
+          "secure": true,
+          "sameSite": "None"
+        },
+        {
+          "name": "MSPOK",
+          "value": "$uuid-c447ea98-2b5e-4b02-8e32-23152ff36ccf$uuid-f6fbd38e-5b58-4ea3-a630-6e8653c51a41$uuid-8760ba9c-0c2e-4e18-acd9-919f21438591",
+          "domain": ".login.live.com",
+          "path": "/",
+          "expires": -1,
+          "httpOnly": true,
+          "secure": true,
+          "sameSite": "None"
+        },
+        {
+          "name": "OParams",
+          "value": "11O.Dnp93vBJ9nOvgirSaqAxRmH9Ktc5IRSu2xvUZMEWo4vPoFKf!lWzcyxuFjkyvv2KYpPTMjB9D8Gg7FJEbGuyT1koMkPQ8qBgjYKBIq!wRiTqHwnTZX6gd3dJujEQ6!NbA2RnO*FgrYviNmb031jT3JNGftyu0mbcNZ7aH41YrK*iQ9b7IdBKfQDRZGz49YvMrTbUVSoRi!5aymshvArG3Fr*6ArShdi*pJEVxDci5*UO5hjFjFbhkrD7JJuYCj3JsaLEfnrZG3!VY!t6XaQ5xDkLowM9WO0mp7MAuWUHEq5vhBVIRyQ15SaffZJZCVZzfXDMlFFLpJSCxghXS*Rc1RGuzbXCTmjR6hV712UfHd0q1QwEYSQQXYr0mNwZQZplBKCVA*Lv3WRWHpUr8k76PAHJkzB9hB*sJeWwiTGSR9y5VKxPm*7YURCaHZqNmQ6P*2zXEDqNrhGW7vzfyrPHfoubHvg9F43tdWyw1Z*d1PCqQKqPPDIlPflnjgVp0LKstyvhQaFDVSXSFKWYsQP4d3s!yj7pCpwD8jzP24m8fGI3vdQ4!qtTtzgNH!hIJy4rUzEdqwwVjx6FIUSUHA0QZ0Xy78Eff4t5pbCZLKhNUrDVWZiAXc!w8a!oBRLR*Y9ljDAJaTR0*Xpi3RO5HmrEXHl0nlVB10Cb*Graibtsq0Jb0YYZjfCQCt5he29H5NwG66NK1oy5ft1*a29YZbETCUM1d3KF2RASDUi*OcemrFfBwxQlrUR!RsY6mLnLx!Gp0XxYamc614C8A5yN39DphqNOPK4hYQNHnup8cQQTXZJH5TgYWByZ1U4KA4KlboLb!vdJkfHWzR0C8waE3eVDh5gyVm54uDLQb5GfuSYA3e02zI7TeGr**gZYAk!2wPlVUahCO7RNkNoTi0ph1nMphmsEdqBQ69GmI*elIoDPw2osHJCIAAVCq!GUeIJpSyjkXTrw*9TW0ZeV9k5ysDwDXOvHlGKujySH0owl9XrCOGhr8q60PXhSZH15I35HiHe7jcGSZux0QV*lNYTrcGovxJbkdsC2ExBiLS!3laLWZt2!spuh8RI2MetoevjyzzYwVbs9HYvr3wkd2xMo0B8s7xgg!!I!8GhngdkfXGQUmr!qAC6Z*TsYleo7!T21g5W77J0kTAgrDHgIdw4VUS!9G1ISSDsgetfoWLKp6Du17yTL650Gv5tf55oV1*VcocomtjFw3HeEZJesMxqI9ZTllNqzlc5ZGQS0FRxSvBtwhKwPzT2lriuVhykZQEBfP!5CK2YoFNzHBOoczXm2VVExck6cXEP6MO3mS!Hut9chmFTn4Uo1V1*9OPTASJMdVFmwFBREvP0hW4!2*BNeihJ*n69I8U*MceYPcVB7oNtZeW5xOgkgpuyDgZlvTFko6ijydROX*4Z4BHFo5IzVVwj8w1tIRjR0L*RU4Ayg40Rk041IbXcF0R6Qh!xA7xm6gEXFnizePhiwu2KJZxbPxwG05s1mnDeJkQWpis5HvraS7jfUF7dmMvqEFCY9FTj4bhc7MWiJMI*yMd27FvP4WP*KsT7vmzE9yXLz4aTsQj2fXqLBHl*SqKw7Ds6DVmMy*3zeEBKnQ24XgHFV74*flugI*fz1uRU0nyFzrZvuSoR!bWq7kAXh*k76MbRL18d2wkhpPsDKB40kFfhg3e3HnBcaPiwpZiUfTbD6UF9M9Vq!Mv!gurcHAyqNSUWGK*OR4c7wM93Y18xEGhMxY5CCrtUToKwxE2KXRNrbyBKppXwkLJH4nxZOiyV*iasYQNbq9GLSy!LqUE4qnQ1cKdgiQtUbbqT!XQgVtJ3jxVQLVFbNf5ehw29iJC2O9iq5dd70Vg2Kxg$$",
+          "domain": ".login.live.com",
+          "path": "/",
+          "expires": -1,
+          "httpOnly": true,
+          "secure": true,
+          "sameSite": "None"
+        }
+      ],
+      "last_login": "2025-12-12T00:34:26.140Z",
+      "login_success": true
     }
   },
-  "last_updated": "2025-12-11T23:05:13.794Z",
-  "total_users": 2
+  "last_updated": "2025-12-12T00:34:26.140Z",
+  "total_users": 3
 }

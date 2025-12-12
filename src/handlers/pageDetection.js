@@ -163,12 +163,23 @@ async function identifyCurrentPage(page) {
 
     // CRITICAL FIX: Check if code input field appeared after email was sent
     // This handles the case where "Verify your email" page shows code input after clicking "Send code"
+    // Expanded with more specific Microsoft selectors to prevent "email_input" false positives
     const hasCodeInputAfterEmail = (
         title.toLowerCase().includes('verify your email') &&
-        (await page.locator('input[name*="code" i], input[placeholder*="code" i], input[aria-label*="code" i]').count() > 0) &&
-        (pageText.toLowerCase().includes('enter the code') ||
+        (
+            await page.locator('input[name*="code" i]').count() > 0 ||
+            await page.locator('input[placeholder*="code" i]').count() > 0 ||
+            await page.locator('input[aria-label*="code" i]').count() > 0 ||
+            await page.locator('input[name="otc"]').count() > 0 ||
+            await page.locator('input[id="idTxtBx_SAOTCC_OTC"]').count() > 0 ||
+            await page.locator('input[id^="iOt"]').count() > 0
+        ) &&
+        (
+            pageText.toLowerCase().includes('enter the code') ||
             pageText.toLowerCase().includes('enter code') ||
-            pageText.toLowerCase().includes('verification code'))
+            pageText.toLowerCase().includes('verification code') ||
+            pageText.toLowerCase().includes('code')
+        )
     );
 
     if (hasCodeInputAfterEmail) {
@@ -392,6 +403,20 @@ async function identifyCurrentPage(page) {
     );
 
     if (isEmailInputPage) {
+        // CRITICAL FIX: If we found code input fields earlier (hasCodeInputAfterEmail logic), we MUST NOT detect email_input
+        // "Verify your email" page often keeps the email input hidden in DOM after showing code input
+        const actuallyHasCodeInput = (
+            await page.locator('input[name*="code" i]').count() > 0 ||
+            await page.locator('input[name="otc"]').count() > 0 ||
+            await page.locator('input[id="idTxtBx_SAOTCC_OTC"]').count() > 0 ||
+            await page.locator('input[id^="iOt"]').count() > 0
+        );
+
+        if (actuallyHasCodeInput) {
+            console.log('⚠️ Email input detected but code input is present - deferring to code_input detection');
+            return 'code_input';
+        }
+
         console.log('✅ Email input page detected');
         return 'email_input';
     }
